@@ -1,0 +1,61 @@
+services:
+  bootstrap-node:
+    container_name: bootstrap-node
+    build: BootstrapNode
+    ports:
+      - "8080:8080"
+    depends_on:
+      - socat
+    environment:
+      NUMBER_OF_NODES: 2
+      DEFAULT_NOSQL_NODE_ADDRESS: "http://decentralizednosqlcluster-nosql-node"
+      BOOTSTRAP_META_PATH: "/var/nosql_cluster"
+    networks:
+      - cluster-network
+    volumes:
+      - "C:\\Users\\kamel\\OneDrive\\Desktop\\ClusterUsers:/var/nosql_cluster"
+
+  nosql-node:
+    build: NoSQLNode
+    ports:
+      - "8081"
+    environment:
+      BOOTSTRAP_NODE_ADDRESS: "http://bootstrap-node:8080"
+    restart: on-failure
+    depends_on:
+      - bootstrap-node
+    networks:
+      - cluster-network
+
+  demo-app:
+    build: EmailDemoApp
+    ports:
+      - "8082:8080"
+    environment:
+      BOOTSTRAP_NODE_REGISTER_URL: "http://bootstrap-node:8080/register-user"
+      NOSQL_NODE_LOGIN_ENDPOINT: "login"
+      NOSQL_NODE_COMMAND_ENDPOINT: "execute"
+      META_DATA_PATH: "/var/demo"
+      DATABASE_USERNAME: "admin"
+      DATABASE_PASSWORD: "admin"
+    depends_on:
+      - nosql-node
+    networks:
+      - cluster-network
+    volumes:
+      - "C:\\Users\\kamel\\OneDrive\\Desktop\\DemoAppMeta:/var/demo"
+
+  socat:
+    image: alpine/socat
+    command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "127.0.0.1:23750:2375"
+    restart: always
+    networks:
+      - cluster-network
+
+networks:
+  cluster-network:
+    driver: bridge

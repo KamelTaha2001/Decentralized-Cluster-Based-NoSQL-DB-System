@@ -1,0 +1,1 @@
+call mvn -f .\BootstrapNode\ clean install

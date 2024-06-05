@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .compose-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .logout-btn {
+            background-color: #ff0059;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .email-list {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+        }
+        .email-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+        .email-item:hover {
+            background-color: #f5f5f5;
+        }
+        .email-title {
+            font-weight: bold;
+            color: #333;
+        }
+        .email-sender {
+            color: #666;
+        }
+        .email-body {
+            display: none;
+            padding: 10px 0;
+            white-space: pre-line;
+        }
+        .email-body.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <form th:action="@{/email-demo-app/compose}" method="get">
+        <button type="submit" class="compose-btn">Compose</button>
+    </form>
+    <form th:action="@{/email-demo-app/logout}" method="get">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+<div class="email-list">
+    <div th:each="email : ${emailList}" class="email-item" onclick="toggleEmailBody(this)">
+        <div class="email-title" th:text="${email.subject}">Email Subject</div>
+        <div class="email-sender" th:text="${email.sender}">Sender Email</div>
+        <div class="email-body" th:text="${email.message}">Email Body</div>
+    </div>
+</div>
+
+<script>
+    function toggleEmailBody(emailItem) {
+        const emailBody = emailItem.querySelector('.email-body');
+        emailBody.classList.toggle('show');
+    }
+</script>
+</body>
+</html>

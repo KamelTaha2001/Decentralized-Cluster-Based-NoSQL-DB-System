@@ -1,0 +1,1 @@
+docker-compose up --scale nosql-node=2 --build

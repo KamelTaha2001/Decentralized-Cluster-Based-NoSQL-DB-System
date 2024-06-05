@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Nodes List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .node-container {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .list-group-item {
+            border: none;
+            padding: 8px 0;
+        }
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div th:each="stat : ${stats}" class="node-container bg-white">
+        <h5 class="mb-3" th:text="${stat.getNodeAddress()}"></h5>
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="mb-3">Users:</h6>
+                <div class="user-list list-group">
+                    <a th:each="username : ${stat.getUsernames()}" class="list-group-item" href="#" th:text="${username}"></a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6 class="mb-3">Documents:</h6>
+                <div class="document-list list-group">
+                    <a th:each="documentID : ${stat.getDocumentIDs()}" class="list-group-item" href="#" th:text="${documentID}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
